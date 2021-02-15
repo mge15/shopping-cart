@@ -1,23 +1,3 @@
-# shopping-cart
-
-
-
-## Setup
-# Repo Setup
-
-Use the GitHub online interface to create a new remote project repository called  "shopping-cart". When prompted by the GitHub online interface, add a "README.md" file and a Python-flavored ".gitignore" file (and also optionally a "LICENSE") during the repo creation process. After this process is complete, you should be able to view the repo on GitHub at an address like  https://github.com/YOUR_USERNAME/shopping-cart.
-
-After creating the remote repo, use GitHub Desktop software or the command-line to download or "clone" it onto your computer. Choose a familiar download location like the Desktop.
-
-After cloning the repo, navigate there from the command-line:
-
-```sh
-cd shopping-cart
-```
-
-Use the text editor or the command-line to create a file in that repo called "shopping_cart.py", and then place the following contents inside:
-
-```sh
 # shopping_cart.py
 
 products = [
@@ -60,12 +40,3 @@ def to_usd(my_price):
 # TODO: write some Python code here to produce the desired output
 
 print(products)
-```
-
-Check that the setup is correct by running the Python script from the command-line:
-
-```sh
-python shopping_cart.py
-```
-
-If you see the provided "products" data structure, you're ready to move on to project development.
