@@ -43,8 +43,30 @@ def to_usd(my_price):
 
 checkout = []
 
-while id != "DONE":
-    id = input("Please input a product identifier, or 'DONE'  if there are no more items: ")
-    if id != "DONE": checkout.append(id)
+#while id != "DONE":
+ #   id = input("Please input a product identifier, or 'DONE'  if there are no more items: ")
+  #  if id != "DONE":checkout.append(id)
 
-print(checkout)
+#print(checkout)
+
+#look-up products
+product_ids = [1, 8, 6, 16, 6]  # temporary list of valid ids for testing purposes
+
+print("SHOPPING CART ITEM IDENTIFIERS INCLUDE:", product_ids)
+
+#TODO: perform product look-ups here!
+
+total = []
+total_price = 0
+
+def lookup(id):
+    print("+ ", products[id - 1]["name"], "(", to_usd(products[id - 1]["price"]), ")")
+    total.append(products[id - 1]["price"])
+
+for prod_id in product_ids:
+    lookup(prod_id)
+
+for value in total:
+    total_price = total_price + value
+
+print("The total price is", to_usd(total_price))
