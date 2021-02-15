@@ -69,3 +69,10 @@ python shopping_cart.py
 ```
 
 If you see the provided "products" data structure, you're ready to move on to project development.
+
+## Step 1: Capturing User Inputs
+
+1. Accept a user input value, store it in a variable, and print it. HINT: use the input() function
+2. One at a time, iteratively accept a user input value, store it in a variable, and print it. HINT: use an infinite while loop. NOTE: you may have to press "control-c" to quit your script if you get stuck.
+3. One at a time, iteratively accept a user input value, store it in a variable, and print it. But stop the loop if the user inputs the word "DONE". HINT: use an if statement in conjunction with the break keyword.
+4. Repeat the previous step, but instead of printing each user input, store them all in a single list. Then print the list after the user is "DONE".

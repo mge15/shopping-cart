@@ -39,4 +39,12 @@ def to_usd(my_price):
 
 # TODO: write some Python code here to produce the desired output
 
-print(products)
+#input one or more product identifiers
+
+checkout = []
+
+while id != "DONE":
+    id = input("Please input a product identifier, or 'DONE'  if there are no more items: ")
+    if id != "DONE": checkout.append(id)
+
+print(checkout)
