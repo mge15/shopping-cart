@@ -3,7 +3,7 @@
 
 Write a program that asks the user to input one or more product identifiers, then looks up the prices for each, then prints an itemized customer receipt including the total amount owed.
 
-Here is the [project desctiption](https://github.com/prof-rossetti/intro-to-python/blob/master/projects/shopping-cart/README.md)
+Here is the [project description](https://github.com/prof-rossetti/intro-to-python/blob/master/projects/shopping-cart/README.md)
 
 ## Setup
 # Repo Setup
@@ -118,3 +118,28 @@ The receipt should include:
 6. The amount of tax owed (e.g. $1.70), calculated by multiplying the total cost by a New York City sales tax rate of 8.75% (for the purposes of this project, groceries are not exempt from sales tax)
 7. The total amount owed, formatted as US dollars and cents (e.g. $21.17), calculated by adding together the amount of tax owed plus the total cost of all shopping cart items
 8. A friendly message thanking the customer and/or encouraging the customer to shop again
+
+## Customizing the Sales Tax
+
+The user is allowed to configure the sales tax by passing an environment variable called "TAX_RATE" stored in a local ".env" file.
+
+To get started, import the module that is necessary when working with a ".env" file
+
+```sh
+import os
+```
+
+In in the root directory of your local repository, create a new file called ".env", and update the contents of the ".env" file to specify the tax rate:
+
+    TAX_RATE= put value here
+
+Use the following code to take the environment variables from .env and assign it to a variable.
+
+```sh
+from dotenv import load_dotenv
+
+load_dotenv()
+
+TAX_NAME = os.getenv("TAX_RATE", default=0)
+
+```

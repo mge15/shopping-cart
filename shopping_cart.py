@@ -1,4 +1,5 @@
 # shopping_cart.py
+import os
 
 products = [
     {"id":1, "name": "Chocolate Sandwich Cookies", "department": "snacks", "aisle": "cookies cakes", "price": 3.50},
@@ -41,6 +42,13 @@ def to_usd(my_price):
 
 #input one or more product identifiers
 
+from dotenv import load_dotenv
+load_dotenv()
+
+TAX_RATE = float(os.getenv("TAX_RATE", default = 0))
+
+print(TAX_RATE)
+
 total_price = 0
 checkout = []
 
@@ -78,7 +86,7 @@ for prod_id in checkout:
     print("+ ", matching_product["name"], "(", to_usd(matching_product["price"]), ")")
 
 print("Total Price:", str(total_price))
-tax = int(total_price) * (0.08875)
+tax = int(total_price) * (TAX_RATE)
 net_total = int(total_price) + tax
 
 # Print the receipt
@@ -86,7 +94,7 @@ net_total = int(total_price) + tax
 
 print("--------------------------------")
 print("Subtotal:", to_usd(total_price))
-print("Plus NYC Sales Tax (8.875%):", to_usd(tax))
+print(f"Plus Sales Tax:", to_usd(tax))
 print("Total:", to_usd(net_total))
 print("--------------------------------")
 print("Thanks for your business! Please come again.")
