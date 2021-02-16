@@ -1,6 +1,9 @@
-# shopping-cart
+## Shopping Cart Project
+# Objective
 
+Write a program that asks the user to input one or more product identifiers, then looks up the prices for each, then prints an itemized customer receipt including the total amount owed.
 
+Here is the [project desctiption](https://github.com/prof-rossetti/intro-to-python/blob/master/projects/shopping-cart/README.md)
 
 ## Setup
 # Repo Setup
@@ -103,3 +106,15 @@ print("SHOPPING CART ITEM IDENTIFIERS INCLUDE:", product_ids)
 1. For a single valid product identifier, look up the matching product and print its name and price. HINT: try using a custom function in conjunction with a list comprehension.
 2. For each valid product identifier in the example list, look up the matching product and print its name and price.
 3. For each valid product identifier in the example list, look up the matching product and print its name and price, and add its price to a running-total of all prices, then print the running-total after iterating through the entire list.
+
+## Printing the Receipt
+
+The receipt should include:
+1. A grocery store name of your choice
+2. A grocery store phone number and/or website URL and/or address of choice
+3. The date and time of the beginning of the checkout process, formatted in a human-friendly way (e.g. 2020-02-07 03:54 PM)
+4. The name and price of each shopping cart item, price being formatted as US dollars and cents (e.g. $3.50, etc.)
+5. The total cost of all shopping cart items (i.e. the "subtotal"), formatted as US dollars and cents (e.g. $19.47), calculated as the sum of their prices
+6. The amount of tax owed (e.g. $1.70), calculated by multiplying the total cost by a New York City sales tax rate of 8.75% (for the purposes of this project, groceries are not exempt from sales tax)
+7. The total amount owed, formatted as US dollars and cents (e.g. $21.17), calculated by adding together the amount of tax owed plus the total cost of all shopping cart items
+8. A friendly message thanking the customer and/or encouraging the customer to shop again

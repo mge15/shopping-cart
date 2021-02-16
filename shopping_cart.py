@@ -41,32 +41,48 @@ def to_usd(my_price):
 
 #input one or more product identifiers
 
+total_price = 0
 checkout = []
 
-#while id != "DONE":
- #   id = input("Please input a product identifier, or 'DONE'  if there are no more items: ")
-  #  if id != "DONE":checkout.append(id)
-
-#print(checkout)
+while True:
+    id = input("Please input a product identifier, or 'DONE'  if there are no more items: ")
+    if id == "DONE":
+        break
+    else:
+        checkout.append(id)
 
 #look-up products
-product_ids = [1, 8, 6, 16, 6]  # temporary list of valid ids for testing purposes
+#product_ids = [1, 8, 6, 16, 6]  # temporary list of valid ids for testing purposes
 
-print("SHOPPING CART ITEM IDENTIFIERS INCLUDE:", product_ids)
+#print("SHOPPING CART ITEM IDENTIFIERS INCLUDE:", product_ids)
 
 #TODO: perform product look-ups here!
 
-total = []
-total_price = 0
+print("--------------------------------")
+print("Safeway")
+print("--------------------------------")
+print("Web: https://local.safeway.com/safeway/dc/washington/1855-wisconsin-ave-nw.html")
+print("Phone: (202) 333-3223")
+print("Checkout Time: 2021-01-15 14:07:25")
+print("--------------------------------")
+print("Shopping Cart Items:")
 
-def lookup(id):
-    print("+ ", products[id - 1]["name"], "(", to_usd(products[id - 1]["price"]), ")")
-    total.append(products[id - 1]["price"])
+for prod_id in checkout:
+    matching_products = [prod for prod in products if str(prod["id"]) == str(prod_id)]
+    matching_product = matching_products[0]
+    total_price = total_price + matching_product["price"]
+    print("+ ", matching_product["name"], "(", to_usd(matching_product["price"]), ")")
 
-for prod_id in product_ids:
-    lookup(prod_id)
+print("Total Price:", str(total_price))
+tax = int(total_price) * (0.08875)
+net_total = int(total_price) + tax
 
-for value in total:
-    total_price = total_price + value
+# Print the receipt
+# Went back into code to add appropriate print statements
 
-print("The total price is", to_usd(total_price))
+print("--------------------------------")
+print("Subtotal:", to_usd(total_price))
+print("Plus NYC Sales Tax (8.875%):", to_usd(tax))
+print("Total:", to_usd(net_total))
+print("--------------------------------")
+print("Thanks for your business! Please come again.")
