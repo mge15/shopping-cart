@@ -48,6 +48,10 @@ while True:
     id = input("Please input a product identifier, or 'DONE'  if there are no more items: ")
     if id == "DONE":
         break
+    try:
+        n = float(id)
+    except ValueError:
+        print ("Input must be a number between 1-20. Try again or input 'Done' if there are no more items")
     else:
         checkout.append(id)
 
