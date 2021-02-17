@@ -43,9 +43,53 @@ def to_usd(my_price):
 #input one or more product identifiers
 
 from dotenv import load_dotenv
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+
 load_dotenv()
 
-TAX_RATE = float(os.getenv("TAX_RATE", default = 0))
+SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY", "OOPS, please set env var called 'SENDGRID_API_KEY'")
+MY_ADDRESS = os.environ.get("MY_EMAIL_ADDRESS", "OOPS, please set env var called 'MY_EMAIL_ADDRESS'")
+
+client = SendGridAPIClient(SENDGRID_API_KEY)
+print("Client:", type(client))
+
+subject = "Your Receipt from the Green Grocery Store"
+
+html_content = "Hello World"
+#
+# or maybe ...
+#html_content = "Hello <strong>World</strong>"
+#
+# or maybe ...
+#html_list_items = "<li>You ordered: Product 1</li>"
+#html_list_items += "<li>You ordered: Product 2</li>"
+#html_list_items += "<li>You ordered: Product 3</li>"
+#html_content = f"""
+#<h3>Hello this is your receipt</h3>
+#<p>Date: ____________</p>
+#<ol>
+#    {html_list_items}
+#</ol>
+#"""
+print("HTML:", html_content)
+
+message = Mail(from_email=MY_ADDRESS, to_emails=MY_ADDRESS,
+               subject=subject, html_content=html_content)
+
+try:
+    response = client.send(message)
+
+    # > <class 'python_http_client.client.Response'>
+    print("RESPONSE:", type(response))
+    print(response.status_code)  # > 202 indicates SUCCESS
+    print(response.body)
+    print(response.headers)
+
+except Exception as e:
+    print("OOPS", e.message)
+
+TAX_RATE = float(os.environ.get("TAX_RATE", default = 0))
 
 print(TAX_RATE)
 
@@ -94,7 +138,12 @@ net_total = int(total_price) + tax
 
 print("--------------------------------")
 print("Subtotal:", to_usd(total_price))
-print(f"Plus Sales Tax:", to_usd(tax))
+print("Plus Sales Tax:", to_usd(tax))
 print("Total:", to_usd(net_total))
 print("--------------------------------")
 print("Thanks for your business! Please come again.")
+
+#answer = input("Would you like to receive the receipt by email? [y]/n: ")
+  #  if answer == "y"
+   # if answer == "n"
+#else: print("Invalid input. Please input y for 'yes' or n for 'no'")
