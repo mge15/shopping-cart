@@ -3,6 +3,7 @@ import os
 from sendgrid.helpers.mail import Mail
 from sendgrid import SendGridAPIClient
 from dotenv import load_dotenv
+from datetime import datetime
 
 products = [
     {"id":1, "name": "Chocolate Sandwich Cookies", "department": "snacks", "aisle": "cookies cakes", "price": 3.50},
@@ -48,8 +49,8 @@ load_dotenv()
 
 TAX_RATE = float(os.environ.get("TAX_RATE", default=0))
 
-#timestamp = datetime.datetime.now()
-#human_friendly_timestamp = timestamp.strftime("%Y-%m-%d %H:%M")
+timestamp = datetime.now()
+human_friendly_timestamp = timestamp.strftime("%Y-%m-%d %H:%M:%S")
 
 total_price = 0
 checkout = []
@@ -78,15 +79,17 @@ print("Safeway")
 print("--------------------------------")
 print("Web: https://local.safeway.com/safeway/dc/washington/1855-wisconsin-ave-nw.html")
 print("Phone: (202) 333-3223")
-print("Checkout Time: 2/17/2021 17:30:24")
+print("Checkout Time: ", human_friendly_timestamp)
 print("--------------------------------")
 print("Shopping Cart Items:")
 
+pdcts = []
+
 for prod_id in checkout:
-    matching_products = [prod for prod in products if str(
-        prod["id"]) == str(prod_id)]
+    matching_products = [prod for prod in products if str(prod["id"]) == str(prod_id)]
     matching_product = matching_products[0]
     total_price = total_price + matching_product["price"]
+    pdcts.append({"id": prod_id, "name": matching_product["name"], "price": to_usd(matching_product["price"])})
     print("+ ", matching_product["name"],
           "(", to_usd(matching_product["price"]), ")")
 
@@ -103,40 +106,64 @@ print("Plus Sales Tax:", to_usd(tax))
 print("Total:", to_usd(net_total))
 print("--------------------------------")
 print("Would you like a receipt?")
-input("Please input your email address, or 'N' to opt out:")
 
 #email code
-
 SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY", default="OOPS, please set env var called 'SENDGRID_API_KEY'")
+SENDGRID_TEMPLATE_ID = os.getenv("SENDGRID_TEMPLATE_ID", default="OOPS, please set env var called 'SENDGRID_TEMPLATE_ID'")
 SENDER_ADDRESS = os.getenv("SENDER_ADDRESS", default="OOPS, please set env var called 'SENDER_ADDRESS'")
+
+# this must match the test data structure
+
+
+template_data = {
+    "total_price_usd": to_usd(net_total),
+    "human_friendly_timestamp": human_friendly_timestamp,
+    "subtotal_price_usd": to_usd(total_price),
+    "tax_usd": to_usd(tax),
+    "products": pdcts
+}  # or construct this dictionary dynamically based on the results of some other process :-D
 
 # > <class 'sendgrid.sendgrid.SendGridAPIClient>
 
+
 client = SendGridAPIClient(SENDGRID_API_KEY)
-print("CLIENT:", type(client))
+#print("CLIENT:", type(client))
 
-subject = "Your Receipt from the Green Grocery Store"
+#subject = "Your Receipt from Safeway"
 
-html_content = "Hello World"
-print("HTML:", html_content)
+#html_content = "Hello World"
+#print("HTML:", html_content)
 
 # FYI: we'll need to use our verified SENDER_ADDRESS as the `from_email` param
 # ... but we can customize the `to_emails` param to send to other addresses
 
-message = Mail(from_email=SENDER_ADDRESS, to_emails=SENDER_ADDRESS, subject=subject, html_content=html_content)
+#message = Mail(from_email=SENDER_ADDRESS, to_emails=SENDER_ADDRESS, subject=subject, html_content=html_content)
 
-try:
-    response = client.send(message)
+recipient = input("Please input your email address, or 'N' to opt out: ")
 
-    # > <class 'python_http_client.client.Response'>
-    print("RESPONSE:", type(response))
-    print(response.status_code)  # > 202 indicates SUCCESS
-    print(response.body)
-    print(response.headers)
+if recipient == "N":
+    print("OK! Printing out receipt now.")
+else:
+    message = Mail(from_email=SENDER_ADDRESS, to_emails=recipient)
+    message.template_id = SENDGRID_TEMPLATE_ID
+    message.dynamic_template_data = template_data
+    #print("MESSAGE:", type(message))
 
-except Exception as err:
-    print(type(err))
-    print(err)
+    print("Sending receipt via email...")
+
+    try:
+        response = client.send(message)
+
+        # > <class 'python_http_client.client.Response'>
+        #print("RESPONSE:", type(response))
+        #print(response.status_code)  # > 202 indicates SUCCESS
+        #print(response.body)
+        #print(response.headers)
+        print("Email sent successfully!")
+
+    except Exception as err:
+        print(type(err))
+        print(err)
 
 print("Thanks for your business! Please come again.")
 #end email code
