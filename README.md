@@ -5,10 +5,12 @@ Write a program that asks the user to input one or more product identifiers, the
 
 Here is the [project description](https://github.com/prof-rossetti/intro-to-python/blob/master/projects/shopping-cart/README.md)
 
+Attribution: Most of the instructions included in this Read Me File are from the "Shopping Cart" Project Instructions and associated further exploration challenge instructions.
+
 ## Setup
 # Repo Setup
 
-Use the GitHub online interface to create a new remote project repository called  "shopping-cart". When prompted by the GitHub online interface, add a "README.md" file and a Python-flavored ".gitignore" file (and also optionally a "LICENSE") during the repo creation process. After this process is complete, you should be able to view the repo on GitHub at an address like  https://github.com/YOUR_USERNAME/shopping-cart.
+Create a new remote project repository on GitHub called  "shopping-cart". When prompted, add a "README.md" file and a Python-flavored ".gitignore" file during the repo creation process. After this process is complete, you should be able to view the repo on GitHub at an address like  https://github.com/YOUR_USERNAME/shopping-cart.
 
 After creating the remote repo, use GitHub Desktop software or the command-line to download or "clone" it onto your computer. Choose a familiar download location like the Desktop.
 
@@ -66,6 +68,23 @@ print(products)
 ```
 
 Check that the setup is correct by running the Python script from the command-line:
+
+```sh
+python shopping_cart.py
+```
+
+# Environment Setup
+
+If you are interested in pursuing the bonus challenges, you will want to create and activate a new Anaconda virtual environment, and use a "requirements.txt" file approach
+
+```sh
+# IF USING THIRD-PARTY PACKAGES, USE A NEW ENV:
+conda create -n shopping-env python=3.8
+conda activate shopping-env
+pip install -r requirements.txt # (after specifying desired packages inside; we will do this in the bonus challenges)
+```
+
+Within an active virtual environment of choice ("base" or project-specific), run the Python script from the command-line:
 
 ```sh
 python shopping_cart.py
@@ -129,9 +148,16 @@ To get started, import the module that is necessary when working with a ".env" f
 import os
 ```
 
-In in the root directory of your local repository, create a new file called ".env", and update the contents of the ".env" file to specify the tax rate:
+In the root directory of your local repository, create a new file called ".env", and update the contents of the ".env" file to specify the tax rate:
 
     TAX_RATE= put value here
+
+In the "requirements.txt" file, put the following contents:
+
+```sh
+# this is the requirements.txt file
+python-dotenv
+```
 
 Use the following code to take the environment variables from .env and assign it to a variable.
 
@@ -143,3 +169,67 @@ load_dotenv()
 TAX_NAME = os.getenv("TAX_RATE", default=0)
 
 ```
+
+## Sending Receipts via Email
+# Installation
+
+From within an active virtual environment, install the sendgrid package
+
+```sh
+pip install sendgrid
+
+# optionally install a specific version:
+#pip install sendgrid==6.6.0
+```
+
+# Setup
+
+Sign up for a SendGrid account, then follow the instructions to complete the "Single Sender Verification," clicking the link in a confirmation email to verify your account.
+
+Then create a SendGrid API Key with "full access" permissions. Store the API Key value in an environment variable called SENDGRID_API_KEY.
+
+Also set an environment variable called SENDER_ADDRESS to be the same email address as the single sender address you just associated with your SendGrid account (e.g. "abc123@gmail.com").
+
+Use a ".env" file approach to managing these environment variables.
+
+# Usage
+
+Test that the the installation and setup worked by sending the following email:
+
+```sh
+import os
+from dotenv import load_dotenv
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+
+load_dotenv()
+
+SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY", default="OOPS, please set env var called 'SENDGRID_API_KEY'")
+SENDER_ADDRESS = os.getenv("SENDER_ADDRESS", default="OOPS, please set env var called 'SENDER_ADDRESS'")
+
+client = SendGridAPIClient(SENDGRID_API_KEY) #> <class 'sendgrid.sendgrid.SendGridAPIClient>
+print("CLIENT:", type(client))
+
+subject = "Your Receipt from the Green Grocery Store"
+
+html_content = "Hello World"
+print("HTML:", html_content)
+
+# FYI: we'll need to use our verified SENDER_ADDRESS as the `from_email` param
+# ... but we can customize the `to_emails` param to send to other addresses
+message = Mail(from_email=SENDER_ADDRESS, to_emails=SENDER_ADDRESS, subject=subject, html_content=html_content)
+
+try:
+    response = client.send(message)
+
+    print("RESPONSE:", type(response)) #> <class 'python_http_client.client.Response'>
+    print(response.status_code) #> 202 indicates SUCCESS
+    print(response.body)
+    print(response.headers)
+
+except Exception as err:
+    print(type(err))
+    print(err)
+```
+
+Check inbox to see that it was sent successfully

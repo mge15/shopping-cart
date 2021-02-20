@@ -56,16 +56,18 @@ total_price = 0
 checkout = []
 
 while True:
-    id = input(
-        "Please input a product identifier, or 'DONE'  if there are no more items: ")
+    id = input("Please input a product identifier, or 'DONE'  if there are no more items: ")
     if id == "DONE":
         break
     try:
         n = float(id)
     except ValueError:
-        print("Input must be a number between 1-20. Try again or input 'Done' if there are no more items")
+        print("Input must be a number between 1-20. Try again or input 'DONE' if there are no more items")
     else:
-        checkout.append(id)
+        if float(id) >= 1 and float(id) <= 20:
+            checkout.append(id)
+        else:
+            print("Input must be a number between 1-20. Try again or input 'DONE' if there are no more items")
 
 #look-up products
 #product_ids = [1, 8, 6, 16, 6]  # temporary list of valid ids for testing purposes
