@@ -73,6 +73,7 @@ human_friendly_timestamp = timestamp.strftime("%Y-%m-%d %H:%M:%S")
 
 total_price = 0
 checkout = []
+pounds = []
 
 while True:
     id = input("Please input a product identifier, or 'DONE'  if there are no more items: ")
@@ -83,8 +84,13 @@ while True:
     except ValueError:
         print("Input must be a number between 1-20. Try again or input 'DONE' if there are no more items")
     else:
-        if float(id) >= 1 and float(id) <= 20:
-            checkout.append(id)
+        if float(id) >= 1 and float(id) <= 21:
+            if float(id) == 21:
+                lbs = input("Please input the number of pounds: ")
+                pounds.append(lbs)
+                checkout.append(id)
+            else:
+                checkout.append(id)
         else:
             print("Input must be a number between 1-20. Try again or input 'DONE' if there are no more items")
 
@@ -106,14 +112,21 @@ print("--------------------------------")
 print("Shopping Cart Items:")
 
 pdcts = []
+i = 0
 
 for prod_id in checkout:
     matching_products = [prod for prod in products if str(prod["id"]) == str(prod_id)]
     matching_product = matching_products[0]
-    total_price = total_price + matching_product["price"]
-    pdcts.append({"id": prod_id, "name": matching_product["name"], "price": to_usd(matching_product["price"])})
-    print("+ ", matching_product["name"],
-          "(", to_usd(matching_product["price"]), ")")
+    if matching_product["price_per"] == "item":
+        total_price = total_price + matching_product["price"]
+        pdcts.append({"id": prod_id, "name": matching_product["name"], "price": to_usd(matching_product["price"])})
+        print("+ ", matching_product["name"], "(", to_usd(matching_product["price"]), ")")
+    else:
+        price = matching_product["price"] * float(pounds[i])
+        total_price = total_price + price
+        pdcts.append({"id": prod_id, "name": matching_product["name"], "price": to_usd(price)})
+        print("+ ", matching_product["name"], "(", to_usd(price), ")")
+        i = i + 1
 
 print("Total Price:", to_usd(total_price))
 tax = total_price * (TAX_RATE)
